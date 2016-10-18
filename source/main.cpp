@@ -6,14 +6,12 @@ int main(int argc, char* argv[])
 {
 	//Start Up
 	GameSubSystem.StartUp();
-	Window_StartUp();
+	GameDisplay.StartUp();
 	Handle_StartUp();
 
 	GameFont = TTF_OpenFont("assets/fonts/OpenSans-Regular.ttf", 30);
 
 	//Game Loop
-	Window_Center();
-
 	Timer StepTimer;
 
 	Paddle PlayerPaddle;
@@ -103,7 +101,7 @@ int main(int argc, char* argv[])
 
 		StepTimer.Start();
 
-		Window_Fill();
+		GameDisplay.Fill();
 
 		PlayerScore.Render();
 		AIScore.Render();
@@ -111,7 +109,7 @@ int main(int argc, char* argv[])
 		AIPaddle.Render();
 		GameBall.Render();
 
-		Window_Render();
+		GameDisplay.Render();
 	}
 
 	AIScore.Destroy();
@@ -124,54 +122,10 @@ int main(int argc, char* argv[])
 	TTF_CloseFont(GameFont);
 	GameFont = nullptr;
 	Handle_ShutDown();
-	Window_ShutDown();
+	GameDisplay.ShutDown();
 	GameSubSystem.ShutDown();
 
 	return 0;
-}
-
-bool Window_StartUp()
-{
-	bool success = true;
-
-	GameWindow = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 450, SDL_WINDOW_SHOWN /*|| SDL_WINDOW_FULLSCREEN*/);
-
-	if (GameWindow == nullptr)
-	{
-		std::cout << "Window could not be created! SDL Error: " << SDL_GetError() << std::endl;
-		success = false;
-	}
-	else
-	{
-		GameRenderer = SDL_CreateRenderer(GameWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-		if (GameRenderer == nullptr)
-		{
-			std::cout << "Renderer could not be created! SDL Error: " << SDL_GetError() << std::endl;
-			success = false;
-		}
-	}
-
-	return success;
-}
-void Window_ShutDown()
-{
-	SDL_DestroyRenderer(GameRenderer);
-	SDL_DestroyWindow(GameWindow);
-	GameRenderer = nullptr;
-	GameWindow = nullptr;
-}
-void Window_Center()
-{
-	SDL_SetWindowPosition(GameWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-}
-void Window_Fill(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
-{
-	SDL_SetRenderDrawColor(GameRenderer, red, green, blue, alpha);
-	SDL_RenderClear(GameRenderer);
-}
-void Window_Render()
-{
-	SDL_RenderPresent(GameRenderer);
 }
 
 bool Handle_StartUp()
@@ -261,7 +215,7 @@ bool Texture::LoadFromFile(std::string path)
 	{
 		SDL_SetColorKey(LoadedSurface, SDL_TRUE, SDL_MapRGB(LoadedSurface->format, 0x00, 0xFF, 0xFF));
 
-		NewTexture = SDL_CreateTextureFromSurface(GameRenderer, LoadedSurface);
+		NewTexture = SDL_CreateTextureFromSurface(GameDisplay.GetRenderer(), LoadedSurface);
 		if (NewTexture == nullptr)
 		{
 			std::cout << "Unable to create texture from " << path.c_str() << "! SDL Error: " << SDL_GetError << std::endl;
@@ -289,7 +243,7 @@ bool Texture::LoadFromRenderedText(std::string texture_text, SDL_Color text_colo
 	}
 	else
 	{
-		MyTexture = SDL_CreateTextureFromSurface(GameRenderer, TextSurface);
+		MyTexture = SDL_CreateTextureFromSurface(GameDisplay.GetRenderer(), TextSurface);
 		if (MyTexture == nullptr)
 		{
 			std::cout << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << std::endl;
@@ -327,7 +281,7 @@ void Texture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cent
 		RenderQuad.h = clip->h;
 	}
 
-	SDL_RenderCopyEx(GameRenderer, MyTexture, clip, &RenderQuad, angle, center, flip);
+	SDL_RenderCopyEx(GameDisplay.GetRenderer(), MyTexture, clip, &RenderQuad, angle, center, flip);
 }
 
 Timer::Timer()
@@ -517,18 +471,15 @@ void Score::Create(int x, int y)
 	SDL_Color TextColor = { 0xFF, 0xFF, 0xFF };
 	MyTexture.LoadFromRenderedText(std::to_string(score), TextColor);
 }
-
 void Score::Destroy()
 {
 	MyTexture.Destroy();
 }
-
 void Score::Logic()
 {
 	SDL_Color TextColor = { 0xFF, 0xFF, 0xFF };
 	MyTexture.LoadFromRenderedText(std::to_string(score), TextColor);
 }
-
 void Score::Render()
 {
 	MyTexture.Render(MyRect.x, MyRect.y);

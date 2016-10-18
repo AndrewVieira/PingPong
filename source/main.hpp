@@ -5,6 +5,7 @@
 #include <string>
 
 #include "subsystem.hpp"
+#include "display.hpp"
 
 enum KEY_BINDINGS
 {
@@ -22,9 +23,7 @@ enum MOUSE_BINDINGS
 };
 
 SubSystem GameSubSystem;
-
-SDL_Window* GameWindow = nullptr;
-SDL_Renderer* GameRenderer = nullptr;
+Display GameDisplay;
 
 SDL_Event GameEvent;
 bool KeyStates[BIND_KEY_TOTAL];
@@ -36,14 +35,6 @@ int MouseY = 0;
 TTF_Font* GameFont;
 
 int main(int argc, char* argv[]);
-
-
-
-bool Window_StartUp();
-void Window_ShutDown();
-void Window_Center();
-void Window_Fill(Uint8 red = 0x00, Uint8 green = 0x00, Uint8 blue = 0x00, Uint8 alpha = 0xFF);
-void Window_Render();
 
 bool Handle_StartUp();
 void Handle_ShutDown();
