@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 	//Start Up
 	GameSubSystem.StartUp();
 	GameDisplay.StartUp();
-	Handle_StartUp();
+	GameHandle.StartUp();
 
 	GameFont = TTF_OpenFont("assets/fonts/OpenSans-Regular.ttf", 30);
 
@@ -34,11 +34,11 @@ int main(int argc, char* argv[])
 	bool running = true;
 	while (running)
 	{
-		Handle_Poll();
+		GameHandle.Poll();
 
 		float time_step = StepTimer.GetTicks() / 1000.f;
 
-		if (MouseStates[BIND_WINDOW_QUIT] || KeyStates[BIND_QUIT] == true)
+		if (GameHandle.GetMouseState(BIND_WINDOW_QUIT) || GameHandle.GetKeyState(BIND_QUIT) == true)
 			running = false;
 
 		int ai_choice = GameAI.Think(GameBall.MyRect.y+15, AIPaddle.MyRect.y+45);
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		if (KeyStates[BIND_UP] == true)
+		if (GameHandle.GetKeyState(BIND_UP) == true)
 		{
 			PlayerPaddle.velocity -= int(100 * time_step);
 		}
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		if (KeyStates[BIND_DOWN] == true)
+		if (GameHandle.GetKeyState(BIND_DOWN) == true)
 		{
 			PlayerPaddle.velocity += int(100 * time_step);
 		}
@@ -121,70 +121,14 @@ int main(int argc, char* argv[])
 	//ShutDown
 	TTF_CloseFont(GameFont);
 	GameFont = nullptr;
-	Handle_ShutDown();
+	GameHandle.ShutDown();
 	GameDisplay.ShutDown();
 	GameSubSystem.ShutDown();
 
 	return 0;
 }
 
-bool Handle_StartUp()
-{
-	for (int i = 0; i < BIND_KEY_TOTAL; i++)
-		KeyStates[i] = false;
 
-	for (int i = 0; i < BIND_MOUSE_TOTAL; i++)
-		MouseStates[i] = false;
-
-	bool success = true;
-
-	KeyBindings[BIND_QUIT] = SDLK_ESCAPE;
-	KeyBindings[BIND_UP] = SDLK_UP;
-	KeyBindings[BIND_DOWN] = SDLK_DOWN;
-	KeyBindings[BIND_SELECT] = SDLK_SPACE;
-
-	//MouseBindings[BIND_WINDOW_QUIT];
-	//MouseBindings[BIND_PRESSED];
-
-	return success;
-}
-void Handle_ShutDown()
-{
-
-}
-void Handle_Poll()
-{
-	while (SDL_PollEvent(&GameEvent))
-	{
-		if (GameEvent.type == SDL_QUIT)
-			MouseStates[BIND_WINDOW_QUIT] = true;
-
-		else if (GameEvent.type == SDL_KEYDOWN)
-		{
-			for (int i = 0; i < BIND_KEY_TOTAL; i++)
-			{
-				if (GameEvent.key.keysym.sym == KeyBindings[i])
-					KeyStates[i] = true;
-			}
-		}
-
-		else if (GameEvent.type == SDL_KEYUP)
-		{
-			for (int i = 0; i < BIND_KEY_TOTAL; i++)
-			{
-				if (GameEvent.key.keysym.sym == KeyBindings[i])
-					KeyStates[i] = false;
-			}
-		}
-
-		else if (GameEvent.type == SDL_MOUSEMOTION)
-			SDL_GetMouseState(&MouseX, &MouseY);
-		else if (GameEvent.type == SDL_MOUSEBUTTONDOWN)
-			MouseStates[BIND_PRESSED] = true;
-		else if (GameEvent.type == SDL_MOUSEBUTTONUP)
-			MouseStates[BIND_PRESSED] = false;
-	}
-}
 
 bool Texture::Create() 
 {

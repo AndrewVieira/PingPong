@@ -6,39 +6,15 @@
 
 #include "subsystem.hpp"
 #include "display.hpp"
-
-enum KEY_BINDINGS
-{
-	BIND_QUIT,
-	BIND_UP,
-	BIND_DOWN,
-	BIND_SELECT,
-	BIND_KEY_TOTAL
-};
-enum MOUSE_BINDINGS
-{
-	BIND_WINDOW_QUIT,
-	BIND_PRESSED,
-	BIND_MOUSE_TOTAL
-};
+#include "handle.hpp"
 
 SubSystem GameSubSystem;
 Display GameDisplay;
-
-SDL_Event GameEvent;
-bool KeyStates[BIND_KEY_TOTAL];
-SDL_Keycode KeyBindings[BIND_KEY_TOTAL];
-bool MouseStates[BIND_MOUSE_TOTAL];
-int MouseX = 0;
-int MouseY = 0;
+Handle GameHandle;
 
 TTF_Font* GameFont;
 
 int main(int argc, char* argv[]);
-
-bool Handle_StartUp();
-void Handle_ShutDown();
-void Handle_Poll();
 
 struct Texture
 {
