@@ -1,5 +1,7 @@
 #pragma once
 
+//Ping Pong by Andrew Vieira
+
 #include <SDL.h>
 
 enum KEY_BINDINGS
