@@ -5,17 +5,12 @@
 #include "subsystem.hpp"
 #include "display.hpp"
 #include "handle.hpp"
+#include "simulator.hpp"
 
-#include "timer.hpp"
-#include "texture.hpp"
-
-#include "game_object.hpp"
-
+TTF_Font* GameFont;
 SubSystem GameSubSystem;
 Display GameDisplay;
 Handle GameHandle;
-
-TTF_Font* GameFont;
+Simulator GameSimulator;
 
 int main(int argc, char* argv[]);
-
