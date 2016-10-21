@@ -8,6 +8,7 @@
 #include "display.hpp"
 #include "handle.hpp"
 
+#include "timer.hpp"
 #include "texture.hpp"
 
 SubSystem GameSubSystem;
@@ -17,30 +18,6 @@ Handle GameHandle;
 TTF_Font* GameFont;
 
 int main(int argc, char* argv[]);
-
-class Timer
-{
-public:
-	Timer();
-
-	void Start();
-	void Stop();
-	void Pause();
-	void Unpause();
-
-	Uint32 GetTicks();
-
-	bool IsStarted();
-	bool IsPaused();
-
-private:
-	Uint32 start_ticks;
-
-	Uint32 paused_ticks;
-
-	bool paused;
-	bool started;
-};
 
 struct GameObject 
 {

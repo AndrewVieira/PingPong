@@ -6,7 +6,7 @@ bool Display::StartUp()
 {
 	bool success = true;
 
-	MyWindow = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 450, SDL_WINDOW_SHOWN /*|| SDL_WINDOW_FULLSCREEN*/);
+	MyWindow = SDL_CreateWindow("Ping Pong", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 450, SDL_WINDOW_SHOWN /*|| SDL_WINDOW_FULLSCREEN*/);
 
 	if (MyWindow == nullptr)
 	{
